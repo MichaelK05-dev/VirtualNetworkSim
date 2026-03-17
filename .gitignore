@@ -2,6 +2,8 @@
 *.exe
 *.out
 *.o
+*.ilk
+*.pdb
 *.obj
 build/
 bin/
