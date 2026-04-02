@@ -1,12 +1,14 @@
+#pragma once
 #include <vector>
 #include <string>
+#include "LAN.h"
 
-// this will all be replaced with actual objects (.i.e. LAN object)
+// to be expanded
 class NetworkManager {
     public:
-    void addLAN(std::string LAN_name);
-    void printLANs();
+    void addLAN(std::unique_ptr<LAN> inputLAN);
+    std::vector<std::unique_ptr<LAN>> getLANs();
     
     private:
-    std::vector<std::string> LAN_list;
+    std::vector<std::unique_ptr<LAN>> LAN_list;
 };

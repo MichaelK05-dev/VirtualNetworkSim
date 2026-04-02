@@ -21,7 +21,6 @@ for (size_t j = 0; j < parameters_tokenized.size(); j++) {
    CommandManager c1;
    c1.registerCommand("CREATE", new CreateCommand());
    c1.executeCommand(parameters_tokenized, n1);
-   n1.printLANs();
 
     return 0;
 }
