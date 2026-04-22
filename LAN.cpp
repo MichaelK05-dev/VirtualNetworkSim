@@ -7,7 +7,9 @@ LAN::LAN(std::vector<std::unique_ptr<INode>> inputNodes) {
 }
 
 LAN::LAN() {
-    childs = {};
+}
+LAN::LAN(std::string name) {
+    this->name = name;
 }
 std::vector<std::unique_ptr<INode>>& LAN::getChilds() {
     return childs;

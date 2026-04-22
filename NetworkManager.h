@@ -7,7 +7,7 @@
 class NetworkManager {
     public:
     void addLAN(std::unique_ptr<LAN> inputLAN);
-    std::vector<std::unique_ptr<LAN>> getLANs();
+    std::vector<std::unique_ptr<LAN>>& getLANs();
     
     private:
     std::vector<std::unique_ptr<LAN>> LAN_list;

@@ -9,6 +9,6 @@ void NetworkManager::addLAN(std::unique_ptr<LAN> inputLAN) {
     std::cout << "LAN added";
 }
 
-std::vector<std::unique_ptr<LAN>> NetworkManager::getLANs() {
+std::vector<std::unique_ptr<LAN>>& NetworkManager::getLANs() {
     return LAN_list;
 }
