@@ -5,11 +5,16 @@ void CommandManager::registerCommand(std::string name, ICommand* cmd) {
     if (!name.empty()) {
         commands.insert({name, cmd});
     }
-   // std::cout << "worked";
 }
 void CommandManager::executeCommand(std::vector<std::string> tokens, NetworkManager& NetManager) {
-  //  std::cout << "worked2";
+    if(tokens.empty()) return; 
+
     std::string command = tokens[0];
-    commands.find(command)->second->execute(tokens, NetManager);
-   // std::cout << "worked3";
+    auto it = commands.find(command);
+    if (it != commands.end()) {
+      it->second->execute(tokens,NetManager);
+    } else {
+      std::cout << "Invalid command \"" << command << "\"" << std::endl;
+    }
+
 }
