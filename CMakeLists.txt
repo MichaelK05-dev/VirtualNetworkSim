@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set (SourceFiles 
     src/CommandManager.cpp
-    src/Main.cpp
+    src/main.cpp
     src/LAN.cpp
     src/CreateCommand.cpp
     src/NetworkManager.cpp

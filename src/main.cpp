@@ -10,6 +10,7 @@
 int main() {
 
     std::string commandinput;
+    std::cout << "Enter commands: " << std::endl;
     std::getline(std::cin, commandinput);
     std::vector<std::string> parameters_tokenized = Parser::tokenize(commandinput);
 

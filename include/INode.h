@@ -3,9 +3,9 @@
 class INode {
     public:
    virtual  std::string getName() = 0;
-   virtual  std::string getIP() = 0;
+   virtual  std::string getMAC() = 0;
 
     private:
     std::string name;
-    std::string ip;
+    std::string mac_address;
 };
