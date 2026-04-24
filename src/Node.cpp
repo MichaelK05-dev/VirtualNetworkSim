@@ -10,6 +10,10 @@ std::string Node::getName() {
     return name;
 }
 
+std::string Node::getMAC() {
+    return mac_address;
+}
+
 //Generates unique 48 bit MAC address in hexadecimal 02:xx:xx:xx:xx:xx, using 02 as fixed prefix for now
 void Node::generateMAC() {
     std::stringstream mac;
