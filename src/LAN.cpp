@@ -14,3 +14,6 @@ LAN::LAN(std::string name) {
 std::vector<std::unique_ptr<INode>>& LAN::getChilds() {
     return childs;
 }
+std::string LAN::getName() {
+    return name;
+}

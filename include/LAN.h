@@ -8,6 +8,7 @@ class LAN : public INetwork {
     LAN(std::vector<std::unique_ptr<INode>> inputNodes);
     LAN(std::string name);
     LAN();
+    std::string getName();
 
     private: 
     std::vector<std::unique_ptr<INode>> childs;
