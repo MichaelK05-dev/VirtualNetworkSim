@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+#include "NetworkInterface.h"
+#include <vector>
+#include <memory>
 class INode {
     public:
    virtual  std::string getName() = 0;
@@ -8,4 +11,6 @@ class INode {
     private:
     std::string name;
     std::string mac_address;
+    virtual void addInterface() = 0;
+    std::vector<std::unique_ptr<NetworkInterface>> interfaces;
 };

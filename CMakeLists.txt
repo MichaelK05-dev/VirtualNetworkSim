@@ -12,6 +12,8 @@ set (SourceFiles
     src/NetworkManager.cpp
     src/Node.cpp
     src/Parser.cpp
+    src/NetworkInterface.cpp
+    src/PC.cpp
     )
 
 include_directories(include)
