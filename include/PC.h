@@ -7,6 +7,8 @@
 class PC : public Node {
     public:
     PC(std::string name);
+    PC();
     std::string getMAC();
     private:
+    static long long nextPCID;
 };

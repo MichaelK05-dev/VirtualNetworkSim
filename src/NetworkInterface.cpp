@@ -8,6 +8,7 @@ long long NetworkInterface::nextID = 1;
 NetworkInterface::NetworkInterface(Node* parent) {
     this->parent = parent;
     generateMAC();
+    incomingFrame = std::nullopt;
 }
 
 std::string NetworkInterface::getMAC() {
@@ -23,4 +24,10 @@ void NetworkInterface::generateMAC() {
         mac << ":" << std::setw(2) << static_cast<int>(currentID >> (i*8) & 0xFF);
     }
     mac_address = mac.str();
+}
+
+void NetworkInterface::receive(EthernetFrame f) {
+    if (f.srcMac == this->mac_address) {
+    incomingFrame = f;
+    }
 }
