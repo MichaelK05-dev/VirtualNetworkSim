@@ -14,6 +14,7 @@ set (SourceFiles
     src/Parser.cpp
     src/NetworkInterface.cpp
     src/PC.cpp
+    src/ListCommand.cpp
     )
 
 include_directories(include)

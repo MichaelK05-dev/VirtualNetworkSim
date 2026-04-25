@@ -7,7 +7,8 @@ class Node : public INode {
     Node(std::string name);
     std::string getName();
     private:
-    std::string name;
-    std::vector<std::unique_ptr<NetworkInterface>> interfaces;
+    protected:
     void addInterface();
+    std::vector<std::unique_ptr<NetworkInterface>> interfaces;
+    std::string name;
 };

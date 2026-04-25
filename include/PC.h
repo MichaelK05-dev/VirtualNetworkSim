@@ -7,5 +7,6 @@
 class PC : public Node {
     public:
     PC(std::string name);
+    std::string getMAC();
     private:
 };

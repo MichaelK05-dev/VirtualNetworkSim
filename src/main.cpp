@@ -5,6 +5,7 @@
 #include "CommandManager.h"
 #include "NetworkManager.h"
 #include "CreateCommand.h"
+#include "ListCommand.h"
 
 
 int main() {
@@ -19,6 +20,7 @@ int main() {
    NetworkManager n1;
    CommandManager c1;
    c1.registerCommand("CREATE", new CreateCommand());
+   c1.registerCommand("LIST", new ListCommand());
    
 
 while (true) {
