@@ -18,3 +18,12 @@ void NetworkManager::addLAN(std::unique_ptr<LAN> inputLAN) {
 std::vector<std::unique_ptr<LAN>>& NetworkManager::getLANs() {
     return LAN_list;
 }
+
+LAN* NetworkManager::getLAN(std::string name) {
+    for (const auto& lan : LAN_list) {
+        if (lan->getName() == name) {
+            return lan.get();
+        }
+    }
+    return nullptr;
+}

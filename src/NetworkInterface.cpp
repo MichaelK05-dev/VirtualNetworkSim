@@ -31,3 +31,7 @@ void NetworkInterface::receive(EthernetFrame f) {
     incomingFrame = f;
     }
 }
+
+Node* NetworkInterface::getParent() {
+    return parent;
+}

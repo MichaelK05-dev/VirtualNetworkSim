@@ -10,6 +10,7 @@ class NetworkInterface {
         std::string getMAC();
         NetworkInterface(Node* parent);
         void receive(EthernetFrame f);
+        Node* getParent();
     private:
         std::string mac_address;
         long long static nextID; // incremented for each Interface, so MACs will always be unique. TO DO: Switch to random MACs 
