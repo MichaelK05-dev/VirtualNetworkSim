@@ -7,7 +7,7 @@ class INode {
     public:
    virtual  std::string getName() = 0;
    virtual  std::string getMAC() = 0;
-
+    virtual std::vector<NetworkInterface*> getInterfaces(bool onlyShowUnconnected) = 0;
     private:
     std::string name;
     std::string mac_address;
