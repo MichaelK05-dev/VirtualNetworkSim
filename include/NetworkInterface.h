@@ -11,11 +11,14 @@ class NetworkInterface {
         NetworkInterface(Node* parent);
         void receive(EthernetFrame f);
         Node* getParent();
+         enum class ConnectionStatus {CONNECTED, UNCONNECTED};
+        ConnectionStatus connection_status;
     private:
         std::string mac_address;
         long long static nextID; // incremented for each Interface, so MACs will always be unique. TO DO: Switch to random MACs 
         void generateMAC();
         Node* parent;
         std::optional<EthernetFrame> incomingFrame;
+       
         
 };

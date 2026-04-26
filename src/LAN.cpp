@@ -10,10 +10,15 @@ LAN::LAN(std::vector<std::unique_ptr<INode>> inputNodes) {
 
 LAN::LAN() {
     this->name = "LAN"+nextLANID++; // TO DO: Check duplicates, if user added a LAN with this name before
+    bus = std::make_unique<EthernetBus>();
+    addNode(std::make_unique<PC>());
+    
 }
 LAN::LAN(std::string name) {
     this->name = name;
-    childs.push_back(std::make_unique<PC>());
+    bus = std::make_unique<EthernetBus>();
+    addNode(std::make_unique<PC>());
+    
 }
 std::vector<std::unique_ptr<INode>>& LAN::getChilds() {
     return childs;
@@ -24,4 +29,5 @@ std::string LAN::getName() {
 
 void LAN::addNode(std::unique_ptr<INode> node) {
     childs.push_back(std::move(node));
+    bus->connect(node->getInterfaces(true).at(0)); // Connects first available Interface to the bus as default for now
 }

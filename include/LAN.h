@@ -1,6 +1,7 @@
 #pragma once
 #include "INetwork.h"
 #include <memory>
+#include "EthernetBus.h"
 
 class LAN : public INetwork {
     public:
@@ -15,5 +16,6 @@ class LAN : public INetwork {
     std::vector<std::unique_ptr<INode>> childs;
     std::string name;
     static long long nextLANID;
+    std::unique_ptr<EthernetBus> bus;
 
 };
