@@ -9,7 +9,7 @@ NetworkInterface::NetworkInterface(Node* parent) {
     this->parent = parent;
     generateMAC();
     incomingFrame = std::nullopt;
-    connection_status = ConnectionStatus::UNCONNECTED;
+    connection_status =  ConnectionStatus::UNCONNECTED;
 }
 
 std::string NetworkInterface::getMAC() {
@@ -30,7 +30,7 @@ void NetworkInterface::generateMAC() {
 void NetworkInterface::receive(EthernetFrame f) {
     if (f.srcMac == this->mac_address) {
     incomingFrame = f;
-    }
+    } 
 }
 
 Node* NetworkInterface::getParent() {

@@ -17,6 +17,8 @@ set (SourceFiles
     src/ListCommand.cpp
     src/EthernetBus.cpp
     src/EthernetFrame.cpp
+    src/StepCommand.cpp
+    src/ConnectCommand.cpp
     )
 
 include_directories(include)

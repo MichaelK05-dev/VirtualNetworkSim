@@ -1,5 +1,6 @@
 #include "Node.h"
 #include <string>
+#include <iostream>
 
 
 Node::Node(std::string name) : name(name) {}
@@ -23,4 +24,9 @@ std::vector<NetworkInterface*> Node::getInterfaces(bool onlyShowUnconnected) {
             return_interfaces.push_back(interface.get());
         }
     }
+    return return_interfaces;
+}
+
+void Node::onTick() {
+    std::cout << "Node ticked " << getName() << std::endl; // to be replaced
 }

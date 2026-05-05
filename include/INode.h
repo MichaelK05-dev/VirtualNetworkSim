@@ -3,11 +3,13 @@
 #include "NetworkInterface.h"
 #include <vector>
 #include <memory>
-class INode {
+#include "ITickable.h"
+class INode : public ITickable {
     public:
    virtual  std::string getName() = 0;
    virtual  std::string getMAC() = 0;
     virtual std::vector<NetworkInterface*> getInterfaces(bool onlyShowUnconnected) = 0;
+    virtual ~INode() = default;
     private:
     std::string name;
     std::string mac_address;

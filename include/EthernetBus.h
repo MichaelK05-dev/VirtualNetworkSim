@@ -1,11 +1,13 @@
 #pragma once
 #include <vector>
 #include "NetworkInterface.h"
+#include "ITickable.h"
 
-class EthernetBus {
+class EthernetBus : public ITickable {
 
     public:
     void connect(NetworkInterface* interface);
+    void onTick();
     private:
     std::vector<NetworkInterface*> connectedInterfaces;
     void broadcast(EthernetFrame f);

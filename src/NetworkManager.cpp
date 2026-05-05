@@ -27,3 +27,11 @@ LAN* NetworkManager::getLAN(std::string name) {
     }
     return nullptr;
 }
+
+void NetworkManager::simulate(int steps) {
+    for (int i = 0; i <= steps; i++) {
+    for (const auto& lan : LAN_list) {
+        lan->runTick();
+    }
+}
+}
