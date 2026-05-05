@@ -7,7 +7,8 @@ class EthernetBus : public ITickable {
 
     public:
     void connect(NetworkInterface* interface);
-    void onTick();
+    void onTick() override;
+    void resolveTick() override;
     private:
     std::vector<NetworkInterface*> connectedInterfaces;
     void broadcast(EthernetFrame f);

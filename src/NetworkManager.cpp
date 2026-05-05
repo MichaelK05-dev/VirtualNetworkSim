@@ -30,8 +30,16 @@ LAN* NetworkManager::getLAN(std::string name) {
 
 void NetworkManager::simulate(int steps) {
     for (int i = 0; i <= steps; i++) {
-    for (const auto& lan : LAN_list) {
-        lan->runTick();
+    for (const auto& tickable : tickable_list) { 
+        tickable->onTick();
     }
+    for (const auto& tickable : tickable_list) { 
+        tickable->resolveTick();
+    }
+    }
+    
 }
+
+void NetworkManager::addTickable(ITickable* tickable) {
+    tickable_list.push_back(tickable);
 }

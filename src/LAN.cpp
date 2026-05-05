@@ -1,6 +1,7 @@
 #include "LAN.h"
 #include <memory>
 #include "PC.h"
+#include "NetworkManager.h"
 
 long long LAN::nextLANID = 1;
 
@@ -32,8 +33,3 @@ void LAN::addNode(std::unique_ptr<INode> node) {
     childs.push_back(std::move(node));
 }
 
-void LAN::runTick() {
-    for (auto& nodes : childs) {
-        nodes->onTick();
-    }
-}

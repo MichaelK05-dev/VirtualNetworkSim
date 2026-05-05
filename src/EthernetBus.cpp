@@ -18,3 +18,7 @@ void EthernetBus::connect(NetworkInterface* interface) {
 void EthernetBus::onTick() {
     
 }
+
+void EthernetBus::resolveTick() {
+    
+}

@@ -3,7 +3,9 @@
 #include <iostream>
 
 
-Node::Node(std::string name) : name(name) {}
+Node::Node(std::string name) : name(name) {
+    
+}
 
 std::string Node::getName() {
     return name;
@@ -29,4 +31,8 @@ std::vector<NetworkInterface*> Node::getInterfaces(bool onlyShowUnconnected) {
 
 void Node::onTick() {
     std::cout << "Node ticked " << getName() << std::endl; // to be replaced
+}
+
+void Node::resolveTick() {
+
 }

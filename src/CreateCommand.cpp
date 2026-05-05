@@ -15,7 +15,10 @@ void CreateCommand::execute(const std::vector<std::string>& args, NetworkManager
         if (args.size() >= 5) {
         for (const auto& lan : NetManager.getLANs()) {
             if (lan->getName() == args[3]) {
-                lan->addNode(std::make_unique<PC>());
+                std::unique_ptr<INode> node = std::make_unique<PC>();
+                NetManager.addTickable(node.get());
+                lan->addNode(std::move(node));
+                
             }
         }
     } else {

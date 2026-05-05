@@ -10,6 +10,7 @@ class Node : public INode {
     std::string getName();
     std::vector<NetworkInterface*> getInterfaces(bool onlyShowUnconnected);
     void onTick() override;
+    void resolveTick() override; // eventually private
     private:
     protected:
     void addInterface();
