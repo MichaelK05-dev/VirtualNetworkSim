@@ -8,7 +8,6 @@ long long NetworkInterface::nextID = 1;
 NetworkInterface::NetworkInterface(Node* parent) {
     this->parent = parent;
     generateMAC();
-    incomingFrame = std::nullopt;
     connection_status =  ConnectionStatus::UNCONNECTED;
 }
 
@@ -27,12 +26,15 @@ void NetworkInterface::generateMAC() {
     mac_address = mac.str();
 }
 
-void NetworkInterface::receive(EthernetFrame f) {
-    if (f.srcMac == this->mac_address) {
-    incomingFrame = f;
-    } 
-}
 
 Node* NetworkInterface::getParent() {
     return parent;
+}
+
+void NetworkInterface::onTick() {
+
+}
+
+void NetworkInterface::resolveTick() {
+
 }

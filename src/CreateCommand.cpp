@@ -9,7 +9,7 @@ void CreateCommand::execute(const std::vector<std::string>& args, NetworkManager
     if (args.size() < 2) { return; }
 
     if (args[1] == "LAN") {
-        NetManager.addLAN(std::make_unique<LAN>(args[3]));
+        NetManager.addLAN(std::make_unique<LAN>(args[3])); // TO DO: Move LAN creation to addLAN
     }
     if (args[1] == "PC") {
         if (args.size() >= 5) {

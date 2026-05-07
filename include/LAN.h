@@ -11,6 +11,7 @@ class LAN : public INetwork {
     LAN();
     std::string getName();
     void addNode(std::unique_ptr<INode> node);
+    EthernetBus* getEthernetBus();
 
     private: 
     std::vector<std::unique_ptr<INode>> childs;

@@ -33,3 +33,6 @@ void LAN::addNode(std::unique_ptr<INode> node) {
     childs.push_back(std::move(node));
 }
 
+EthernetBus* LAN::getEthernetBus() {
+    return bus.get();
+}

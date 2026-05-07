@@ -2,10 +2,12 @@
 #include <iostream>
 #include "Node.h"
 
+EthernetBus::EthernetBus() {
+    
+}
+
 void EthernetBus::broadcast(EthernetFrame f) {
-    for (NetworkInterface* interface : connectedInterfaces) {
-        interface->receive(f);
-    }
+  
 }
 
 void EthernetBus::connect(NetworkInterface* interface) {
