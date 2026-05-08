@@ -2,6 +2,7 @@
 #include <iostream>
 #include "LAN.h"
 #include <algorithm>
+#include "Node.h"
 
 
 void NetworkManager::addLAN(std::unique_ptr<LAN> inputLAN) { 
@@ -50,4 +51,15 @@ void NetworkManager::addTickable(ITickable* tickable) {
 
 std::vector<ITickable*> NetworkManager::getTickables() {
     return tickable_list;
+}
+
+Node* NetworkManager::getNode(std::string name) {
+    for (auto* tickable : tickable_list) {
+        if (Node* casted_node = dynamic_cast<Node*>(tickable)) {
+            if (casted_node->getName() == name) {
+                return casted_node;
+            }
+        }
+    }
+    return nullptr;
 }

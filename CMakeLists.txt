@@ -19,6 +19,7 @@ set (SourceFiles
     src/EthernetFrame.cpp
     src/StepCommand.cpp
     src/ConnectCommand.cpp
+    src/SendCommand.cpp
     )
 
 include_directories(include)

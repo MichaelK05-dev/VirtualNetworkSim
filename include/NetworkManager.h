@@ -13,6 +13,7 @@ class NetworkManager {
     void simulate(int steps);
     void addTickable(ITickable* tickable);
     std::vector<ITickable*> getTickables();
+    Node* getNode(std::string name);
     
     private:
     std::vector<std::unique_ptr<LAN>> LAN_list;
