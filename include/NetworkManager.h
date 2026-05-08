@@ -12,6 +12,7 @@ class NetworkManager {
     long long currentTick = 0;
     void simulate(int steps);
     void addTickable(ITickable* tickable);
+    std::vector<ITickable*> getTickables();
     
     private:
     std::vector<std::unique_ptr<LAN>> LAN_list;
