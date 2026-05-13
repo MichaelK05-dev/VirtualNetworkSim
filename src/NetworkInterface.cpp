@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include "EthernetBus.h"
 
 long long NetworkInterface::nextID = 1;
 
@@ -9,6 +10,13 @@ NetworkInterface::NetworkInterface(Node* parent) {
     this->parent = parent;
     generateMAC();
     connection_status =  ConnectionStatus::UNCONNECTED;
+    connectedBus = nullptr;
+}
+NetworkInterface::NetworkInterface(Node* parent, EthernetBus* bus) {
+    this->parent = parent;
+    generateMAC();
+    connection_status =  ConnectionStatus::UNCONNECTED;
+    connectedBus = bus;
 }
 
 std::string NetworkInterface::getMAC() {
@@ -32,9 +40,25 @@ Node* NetworkInterface::getParent() {
 }
 
 void NetworkInterface::onTick() {
+    if (!bitSendQueue.empty()) {
+        State = StateEnum::SENDING;
+    }
 
+    if (State == StateEnum::SENDING) {
+        bool bit = bitSendQueue.front();
+        currentSendingBit = (bit == true) ? Signal::ONE : Signal::ZERO;
+    } else {
+        currentSendingBit = Signal::IDLE;
+    }
+    bitSendQueue.pop_front();
+    
+    
 }
 
 void NetworkInterface::resolveTick() {
+
+}
+
+void NetworkInterface::connectBus(EthernetBus* bus) {
 
 }
