@@ -6,3 +6,4 @@ enum class Signal {
     ONE,
     COLLISION
 };
+enum class ConnectionStatus {CONNECTED, UNCONNECTED};

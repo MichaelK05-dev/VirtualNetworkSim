@@ -60,5 +60,5 @@ void NetworkInterface::resolveTick() {
 }
 
 void NetworkInterface::connectBus(EthernetBus* bus) {
-
+    connectedBus = bus;
 }

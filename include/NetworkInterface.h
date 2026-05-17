@@ -16,7 +16,6 @@ class NetworkInterface : public ITickable {
         NetworkInterface(Node* parent);
         NetworkInterface(Node* parent, EthernetBus* bus);
         Node* getParent();
-        enum class ConnectionStatus {CONNECTED, UNCONNECTED};
         enum class StateEnum {IDLE, PREPARING, SENSING, SENDING, RECEIVING, BACKOFF};
         ConnectionStatus connection_status;
         StateEnum State;

@@ -1,6 +1,7 @@
 #include "Node.h"
 #include <string>
 #include <iostream>
+#include "GlobalTypes.h"
 
 
 Node::Node(std::string name) : name(name) {
@@ -15,11 +16,15 @@ void Node::addInterface() {
     interfaces.push_back(std::make_unique<NetworkInterface>(this));
 }
 
-std::vector<NetworkInterface*> Node::getInterfaces(bool onlyShowUnconnected) {
+std::vector<NetworkInterface*> Node::getInterfaces(std::string filterParam="") {
     std::vector<NetworkInterface*> return_interfaces;
     for (const auto& interface : interfaces) {
-        if (onlyShowUnconnected == true) {
-            if (interface->connection_status == NetworkInterface::ConnectionStatus::UNCONNECTED) {
+        if (filterParam  == "unconnected") {
+            if (interface->connection_status == ConnectionStatus::UNCONNECTED) {
+                return_interfaces.push_back(interface.get());
+            }
+        } else if (filterParam == "connected") {
+            if (interface->connection_status == ConnectionStatus::CONNECTED) {
                 return_interfaces.push_back(interface.get());
             }
         } else {

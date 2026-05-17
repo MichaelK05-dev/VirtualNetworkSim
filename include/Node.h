@@ -8,7 +8,7 @@ class Node : public INode {
     public:
     Node(std::string name);
     std::string getName();
-    std::vector<NetworkInterface*> getInterfaces(bool onlyShowUnconnected);
+    std::vector<NetworkInterface*> getInterfaces(std::string filterParam="");
     void onTick() override;
     void resolveTick() override; // eventually private
     private:
