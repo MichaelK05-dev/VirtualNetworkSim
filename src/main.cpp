@@ -4,9 +4,9 @@
 #include "Parser.h"
 #include "CommandManager.h"
 #include "NetworkManager.h"
-#include "CreateCommand.h"
-#include "ListCommand.h"
-#include "StepCommand.h"
+#include "commands/CreateCommand.h"
+#include "commands/ListCommand.h"
+#include "commands/StepCommand.h"
 
 
 int main() {

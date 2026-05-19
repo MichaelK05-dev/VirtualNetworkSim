@@ -8,7 +8,7 @@ class INode : public ITickable {
     public:
    virtual  std::string getName() = 0;
    virtual  std::string getMAC() = 0;
-    virtual std::vector<NetworkInterface*> getInterfaces(bool onlyShowUnconnected) = 0;
+    virtual std::vector<NetworkInterface*> getInterfaces(std::string filterParam="") = 0;
     virtual ~INode() = default;
     private:
     std::string name;

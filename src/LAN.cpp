@@ -29,7 +29,7 @@ std::string LAN::getName() {
 }
 
 void LAN::addNode(std::unique_ptr<INode> node) {
-    bus->connect(node->getInterfaces(true).at(0)); // Connects first available Interface to the bus as default for now
+    bus->connect(node->getInterfaces("unconnected").at(0)); // Connects first available Interface to the bus as default for now
     childs.push_back(std::move(node));
 }
 

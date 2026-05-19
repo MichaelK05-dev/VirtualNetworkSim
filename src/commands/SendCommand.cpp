@@ -1,5 +1,5 @@
 #pragma once
-#include "SendCommand.h"
+#include "commands/SendCommand.h"
 #include "NetworkManager.h"
 #include <string>
 #include <iostream>

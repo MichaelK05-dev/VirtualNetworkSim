@@ -1,4 +1,4 @@
-#include "StepCommand.h"
+#include "commands/StepCommand.h"
 #include "NetworkManager.h"
 #include <string>
 

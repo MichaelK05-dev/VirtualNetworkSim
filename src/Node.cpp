@@ -16,7 +16,7 @@ void Node::addInterface() {
     interfaces.push_back(std::make_unique<NetworkInterface>(this));
 }
 
-std::vector<NetworkInterface*> Node::getInterfaces(std::string filterParam="") {
+std::vector<NetworkInterface*> Node::getInterfaces(std::string filterParam) {
     std::vector<NetworkInterface*> return_interfaces;
     for (const auto& interface : interfaces) {
         if (filterParam  == "unconnected") {
@@ -40,4 +40,11 @@ void Node::onTick() {
 
 void Node::resolveTick() {
 
+}
+
+std::string Node::getMAC() {
+    if (!interfaces.empty()) {
+        return interfaces.at(0)->getMAC(); //not differentiating between connected/unconnected for now
+    }
+    return "00:00:00:00:00:00"; // fallback
 }
