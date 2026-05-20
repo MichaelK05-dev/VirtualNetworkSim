@@ -48,3 +48,13 @@ std::string Node::getMAC() {
     }
     return "00:00:00:00:00:00"; // fallback
 }
+
+void Node::send(std::string dest_mac, std::string payload) {
+    std::unique_ptr<EthernetFrame> frame = std::make_unique<EthernetFrame>(this->getMAC(), dest_mac, payload);
+    std::cout << "got till send";
+    NetworkInterface* interface =  getInterfaces("connected").at(0);
+    interface->sendFrame(std::move(frame));
+    for (bool bit : interface->bitSendQueue) {
+        std::cout << (bit ? "1" : "0");
+    }
+}

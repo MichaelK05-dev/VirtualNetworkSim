@@ -12,6 +12,7 @@ class Node : public INode {
     std::vector<NetworkInterface*> getInterfaces(std::string filterParam) override;
     void onTick() override;
     void resolveTick() override; // eventually private
+    void send(std::string dest_mac, std::string payload);
     private:
     protected:
     void addInterface();
