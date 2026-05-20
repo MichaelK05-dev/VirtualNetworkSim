@@ -62,7 +62,6 @@ void NetworkInterface::connectBus(EthernetBus* bus) {
 
 
 void NetworkInterface::sendFrame(std::unique_ptr<EthernetFrame> frame) {
-    std::cout << "got till sendframe";
     bitSendQueue.clear();
     bool lastBit = false;
     //56-bit preamble
@@ -79,19 +78,13 @@ void NetworkInterface::sendFrame(std::unique_ptr<EthernetFrame> frame) {
         lastBit = !lastBit;
     }
 }
-std::cout << "got till sendframe after preamble";
-std::cout << "DEBUG: Converting MAC: '" << frame->getdstMac() << "'" << std::endl;
-std::cout << "DEBUG: Converting MAC1: '" << frame->getsrcMac() << "'" << std::endl;
     for (bool bit : convertMACToBits(frame->getdstMac())) {
         bitSendQueue.push_back(bit);
     }
     for (bool bit : convertMACToBits(frame->getsrcMac())) {
         bitSendQueue.push_back(bit);
     }
-    std::cout << "got till sendframe after macs";
     serializeStringToBits(frame->getPayload());
-
-    std::cout << "got till sendframe after payload";
 
 }
 

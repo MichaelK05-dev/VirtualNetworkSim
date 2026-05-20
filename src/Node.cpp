@@ -51,10 +51,10 @@ std::string Node::getMAC() {
 
 void Node::send(std::string dest_mac, std::string payload) {
     std::unique_ptr<EthernetFrame> frame = std::make_unique<EthernetFrame>(this->getMAC(), dest_mac, payload);
-    std::cout << "got till send";
     NetworkInterface* interface =  getInterfaces("connected").at(0);
     interface->sendFrame(std::move(frame));
-    for (bool bit : interface->bitSendQueue) {
-        std::cout << (bit ? "1" : "0");
+    for (bool bit : interface->bitSendQueue) { // for debugging
+        std::cout << (bit ? "1" : "0") << std::flush;
     }
+    std::cout << std::endl;
 }
