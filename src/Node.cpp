@@ -36,6 +36,9 @@ std::vector<NetworkInterface*> Node::getInterfaces(std::string filterParam) {
 
 void Node::onTick() {
     std::cout << "Node ticked " << getName() << std::endl; // to be replaced
+    for (auto& interface : interfaces) {
+        interface->onTick();
+    }
 }
 
 void Node::resolveTick() {

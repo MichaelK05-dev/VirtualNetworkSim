@@ -35,6 +35,7 @@ class NetworkInterface : public ITickable {
         EthernetBus* connectedBus;
         void serializeStringToBits(std::string inputword);
         std::vector<bool> convertMACToBits(std::string hex_string);
+        int idleTicksCounter = 0;
        
         
 };

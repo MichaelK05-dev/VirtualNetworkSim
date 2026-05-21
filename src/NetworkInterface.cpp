@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <sstream>
 #include "EthernetBus.h"
+#include "Config.h"
 
 long long NetworkInterface::nextID = 1;
 
@@ -33,26 +34,41 @@ Node* NetworkInterface::getParent() {
     return parent;
 }
 
+// ISSUE: Last bit isnt being checked for collission anymore, since state will be in IDLE before check happens
 void NetworkInterface::onTick() {
-    if (!bitSendQueue.empty()) {
-        State = StateEnum::SENDING;
-    }
+    if (connection_status == ConnectionStatus::UNCONNECTED) { return;}
+    lastSentBit = currentSendingBit; // save the bit from previous tick
 
+    std::cout << "in ontick";
+    if (!bitSendQueue.empty()) {
     if (State == StateEnum::SENDING) {
         bool bit = bitSendQueue.front();
         currentSendingBit = (bit == true) ? Signal::ONE : Signal::ZERO;
         std::cout << (bit ? "1" : "0") << std::flush;
         bitSendQueue.pop_front();
-    } else {
+        if (bitSendQueue.empty()) {
+            State = StateEnum::IDLE;
+        }
+    } else if (State == StateEnum::SENSING) {
         currentSendingBit = Signal::IDLE;
     }
-    
-    std::cout << std::endl;
-    
+    } else {
+        State = StateEnum::IDLE;
+    }
+     connectedBus->reportSignal(currentSendingBit); 
 }
 
 void NetworkInterface::resolveTick() {
-
+    if (State == StateEnum::SENSING) {
+        if (connectedBus->current_signal == Signal::IDLE) {
+            idleTicksCounter++;
+        } else {
+            idleTicksCounter = 0;
+        }
+        if (idleTicksCounter >= Config::Ethernet::INTERFRAME_GAP_TICKS) {
+            State = StateEnum::SENDING;
+        }
+    }
 }
 
 void NetworkInterface::connectBus(EthernetBus* bus) {
