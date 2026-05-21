@@ -16,15 +16,17 @@ class NetworkInterface : public ITickable {
         std::string getMAC();
         NetworkInterface(Node* parent);
         Node* getParent();
-        enum class StateEnum {IDLE, PREPARING, SENSING, SENDING, RECEIVING, BACKOFF};
+        enum class StateEnum {IDLE, PREPARING, SENSING, SENDING, RECEIVING, BACKOFF, FINISHING};
         ConnectionStatus connection_status;
         StateEnum State;
         std::deque<bool> bitReceiveBuffer;
         std::deque<bool> bitSendQueue;
+        std::queue<std::unique_ptr<EthernetFrame>> frameQueue;
         void onTick();
         void resolveTick();
         void connectBus(EthernetBus* bus);
         void sendFrame(std::unique_ptr<EthernetFrame>);
+        void serialize(const std::unique_ptr<EthernetFrame>& frame);
     private:
         std::string mac_address;
         long long static nextID; // incremented for each Interface, so MACs will always be unique. TO DO: Switch to random MACs 

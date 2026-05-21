@@ -38,6 +38,16 @@ Node* NetworkInterface::getParent() {
 void NetworkInterface::onTick() {
     if (connection_status == ConnectionStatus::UNCONNECTED) { return;}
     lastSentBit = currentSendingBit; // save the bit from previous tick
+    currentSendingBit = Signal::IDLE;
+
+    if (State == StateEnum::IDLE && !frameQueue.empty()) { // serializing frames to bits
+    serialize(frameQueue.front());
+    if (!bitSendQueue.empty()) {
+        State = StateEnum::SENSING;
+    }
+
+    }
+
 
     std::cout << "in ontick";
     if (!bitSendQueue.empty()) {
@@ -46,29 +56,68 @@ void NetworkInterface::onTick() {
         currentSendingBit = (bit == true) ? Signal::ONE : Signal::ZERO;
         std::cout << (bit ? "1" : "0") << std::flush;
         bitSendQueue.pop_front();
-        if (bitSendQueue.empty()) {
-            State = StateEnum::IDLE;
-        }
     } else if (State == StateEnum::SENSING) {
         currentSendingBit = Signal::IDLE;
     }
-    } else {
-        State = StateEnum::IDLE;
-    }
+    } 
      connectedBus->reportSignal(currentSendingBit); 
+
 }
 
 void NetworkInterface::resolveTick() {
+if (State == StateEnum::SENDING && bitSendQueue.empty()) {
+    State = StateEnum::FINISHING;
+}
+
     if (State == StateEnum::SENSING) {
         if (connectedBus->current_signal == Signal::IDLE) {
             idleTicksCounter++;
         } else {
             idleTicksCounter = 0;
         }
-        if (idleTicksCounter >= Config::Ethernet::INTERFRAME_GAP_TICKS) {
+        if (idleTicksCounter >= Config::Ethernet::INTERFRAME_GAP_TICKS) { // TO DO: Make interframe gap random
             State = StateEnum::SENDING;
         }
+        
     }
+    if (lastSentBit != Signal::IDLE) {
+    if (connectedBus->current_signal == Signal::COLLISION) {
+        // TO DO: Add backoff
+        currentSendingBit = Signal::IDLE;
+        serialize(frameQueue.front());
+        } else if (State == StateEnum::FINISHING) {
+            frameQueue.pop();
+            State = StateEnum::IDLE;
+        }
+    
+    } 
+
+}
+
+void NetworkInterface::serialize(const std::unique_ptr<EthernetFrame>& frame) {
+    bitSendQueue.clear();
+    bool lastBit = false;
+    //56-bit preamble
+    for (int i = 0; i < 56; i++) {
+        bitSendQueue.push_back(!lastBit);
+        lastBit=!lastBit;
+    }
+    //SFD 1 byte, 10101011
+    for (int i = 0; i < 8; i++) {
+    if (i == 7) {
+        bitSendQueue.push_back(true); 
+    } else {
+        bitSendQueue.push_back(!lastBit);
+        lastBit = !lastBit;
+    }
+}
+    for (bool bit : convertMACToBits(frame->getdstMac())) {
+        bitSendQueue.push_back(bit);
+    }
+    for (bool bit : convertMACToBits(frame->getsrcMac())) {
+        bitSendQueue.push_back(bit);
+    }
+    serializeStringToBits(frame->getPayload());
 }
 
 void NetworkInterface::connectBus(EthernetBus* bus) {
@@ -101,6 +150,9 @@ void NetworkInterface::sendFrame(std::unique_ptr<EthernetFrame> frame) {
         bitSendQueue.push_back(bit);
     }
     serializeStringToBits(frame->getPayload());
+    if (!bitSendQueue.empty()) {
+        State = StateEnum::SENSING;
+    }
 
 }
 
