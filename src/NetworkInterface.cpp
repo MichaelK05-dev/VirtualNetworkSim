@@ -127,32 +127,7 @@ void NetworkInterface::connectBus(EthernetBus* bus) {
 
 
 void NetworkInterface::sendFrame(std::unique_ptr<EthernetFrame> frame) {
-    bitSendQueue.clear();
-    bool lastBit = false;
-    //56-bit preamble
-    for (int i = 0; i < 56; i++) {
-        bitSendQueue.push_back(!lastBit);
-        lastBit=!lastBit;
-    }
-    //SFD 1 byte, 10101011
-    for (int i = 0; i < 8; i++) {
-    if (i == 7) {
-        bitSendQueue.push_back(true); 
-    } else {
-        bitSendQueue.push_back(!lastBit);
-        lastBit = !lastBit;
-    }
-}
-    for (bool bit : convertMACToBits(frame->getdstMac())) {
-        bitSendQueue.push_back(bit);
-    }
-    for (bool bit : convertMACToBits(frame->getsrcMac())) {
-        bitSendQueue.push_back(bit);
-    }
-    serializeStringToBits(frame->getPayload());
-    if (!bitSendQueue.empty()) {
-        State = StateEnum::SENSING;
-    }
+    frameQueue.push(std::move(frame));
 
 }
 
