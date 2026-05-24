@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cmath>
 #include <random>
+#include "Node.h"
 
 long long NetworkInterface::nextID = 1;
 
@@ -48,6 +49,7 @@ void NetworkInterface::onTick() {
     serialize(frameQueue.front());
     if (!bitSendQueue.empty()) {
         State = StateEnum::SENSING;
+        idleTicksCounter = 0;
     }
 
     }
@@ -60,15 +62,25 @@ void NetworkInterface::onTick() {
         currentSendingBit = Signal::IDLE;
     }
     } 
+
+    if (State == StateEnum::BACKOFF) {
+        if (backoffTimer <= 0) {
+            State = StateEnum::IDLE;
+        } else {
+            backoffTimer--;
+        }
+    }
      connectedBus->reportSignal(currentSendingBit); 
 }
 // TO DO: refactor to make logic easier to read
 void NetworkInterface::resolveTick() {
+static std::default_random_engine generator(std::random_device{}());
 if (State == StateEnum::SENDING && bitSendQueue.empty()) {
     State = StateEnum::FINISHING;
 }
 
     if (State == StateEnum::SENSING) {
+        //std::cout << parent->getName() << "in sensing: " << idleTicksCounter; for debugging
         if (connectedBus->current_signal == Signal::IDLE) {
             idleTicksCounter++;
         } else {
@@ -85,7 +97,6 @@ if (State == StateEnum::SENDING && bitSendQueue.empty()) {
         collisionCount++;
         bitSendQueue.clear();
         int backoff_limit = std::pow(2, std::min(collisionCount, Config::Ethernet::BACKOFF_LIMIT_K))-1;
-        std::default_random_engine generator;
         std::uniform_int_distribution<int> distribution(0,backoff_limit);
         int random_wait = distribution(generator);
         backoffTimer = random_wait*Config::Ethernet::SLOT_TIME_TICKS;
@@ -97,16 +108,6 @@ if (State == StateEnum::SENDING && bitSendQueue.empty()) {
         }
     
     } 
-
-    if (State == StateEnum::BACKOFF) {
-        if (backoffTimer <= 0) {
-            State = StateEnum::IDLE;
-        } else {
-            backoffTimer--;
-        }
-    }
-
-
 
     //Receiving logic
     switch(connectedBus->current_signal) {
