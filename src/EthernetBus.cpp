@@ -19,12 +19,6 @@ void EthernetBus::connect(NetworkInterface* interface) {
 }
 
 void EthernetBus::onTick() {
-      std::cout << "bus ticked" << std::flush;
-    if (current_signal == Signal::ONE) {
-        std::cout << "1";
-    } else if (current_signal == Signal::ZERO) {
-        std::cout << "0";
-    }
   
 }
 
@@ -36,10 +30,10 @@ void EthernetBus::prepareNewTick() {
     current_signal = writing_signal;
     writing_signal = Signal::IDLE;
     SignalsPresentThisTick = 0;
+    std::cout << "Signal: "<< (((current_signal==Signal::ONE) ? "one -" : (current_signal==Signal::ZERO) ? "zero -" : ((current_signal==Signal::COLLISION) ? "collision -" : "idle -"))) << std::endl;
 }
 void EthernetBus::reportSignal(Signal s) {
    if (s == Signal::IDLE) return;
    SignalsPresentThisTick++;
    writing_signal = (SignalsPresentThisTick > 1) ? Signal::COLLISION : s;
-   std::cout << "Signal "<< (((s==Signal::ONE) ? "one" : (s==Signal::ZERO) ? "zero" : "collision"));
 }
