@@ -4,6 +4,9 @@
 #include <sstream>
 #include "EthernetBus.h"
 #include "Config.h"
+#include <algorithm>
+#include <cmath>
+#include <random>
 
 long long NetworkInterface::nextID = 1;
 
@@ -11,6 +14,8 @@ NetworkInterface::NetworkInterface(Node* parent) {
     this->parent = parent;
     generateMAC();
     connection_status =  ConnectionStatus::UNCONNECTED;
+    ReceivingState = ReceivingStateEnum::SEARCHING_SFD;
+    State = StateEnum::IDLE;
     connectedBus = nullptr;
 }
 
@@ -33,8 +38,7 @@ void NetworkInterface::generateMAC() {
 Node* NetworkInterface::getParent() {
     return parent;
 }
-
-// ISSUE: Last bit isnt being checked for collission anymore, since state will be in IDLE before check happens
+// TO DO: refactor to make logic easier to read
 void NetworkInterface::onTick() {
     if (connection_status == ConnectionStatus::UNCONNECTED) { return;}
     lastSentBit = currentSendingBit; // save the bit from previous tick
@@ -47,23 +51,18 @@ void NetworkInterface::onTick() {
     }
 
     }
-
-
-    std::cout << "in ontick";
     if (!bitSendQueue.empty()) {
     if (State == StateEnum::SENDING) {
         bool bit = bitSendQueue.front();
         currentSendingBit = (bit == true) ? Signal::ONE : Signal::ZERO;
-        std::cout << (bit ? "1" : "0") << std::flush;
         bitSendQueue.pop_front();
     } else if (State == StateEnum::SENSING) {
         currentSendingBit = Signal::IDLE;
     }
     } 
      connectedBus->reportSignal(currentSendingBit); 
-
 }
-
+// TO DO: refactor to make logic easier to read
 void NetworkInterface::resolveTick() {
 if (State == StateEnum::SENDING && bitSendQueue.empty()) {
     State = StateEnum::FINISHING;
@@ -82,15 +81,59 @@ if (State == StateEnum::SENDING && bitSendQueue.empty()) {
     }
     if (lastSentBit != Signal::IDLE) {
     if (connectedBus->current_signal == Signal::COLLISION) {
-        // TO DO: Add backoff
+       // backoff
+        collisionCount++;
+        bitSendQueue.clear();
+        int backoff_limit = std::pow(2, std::min(collisionCount, Config::Ethernet::BACKOFF_LIMIT_K))-1;
+        std::default_random_engine generator;
+        std::uniform_int_distribution<int> distribution(0,backoff_limit);
+        int random_wait = distribution(generator);
+        backoffTimer = random_wait*Config::Ethernet::SLOT_TIME_TICKS;
+        State = StateEnum::BACKOFF;
         currentSendingBit = Signal::IDLE;
-        serialize(frameQueue.front());
         } else if (State == StateEnum::FINISHING) {
             frameQueue.pop();
             State = StateEnum::IDLE;
         }
     
     } 
+
+    if (State == StateEnum::BACKOFF) {
+        if (backoffTimer <= 0) {
+            State = StateEnum::IDLE;
+        } else {
+            backoffTimer--;
+        }
+    }
+
+
+
+    //Receiving logic
+    switch(connectedBus->current_signal) {
+        case Signal::COLLISION:
+            ReceivingState = ReceivingStateEnum::SEARCHING_SFD;
+            bitReceiveBuffer.clear();
+            sfdWindow = 0;
+            break;
+        case Signal::IDLE:
+            if (ReceivingState == ReceivingStateEnum::RECORDING) {
+                std::unique_ptr<EthernetFrame> received_frame = deserialize();
+                 std::cout << "Received payload: " << received_frame->getPayload();
+                 ReceivingState = ReceivingStateEnum::SEARCHING_SFD;
+                 bitReceiveBuffer.clear();
+            }
+            break;
+        default:
+            bool bit = (connectedBus->current_signal == Signal::ONE);
+            if (ReceivingState == ReceivingStateEnum::SEARCHING_SFD) {
+                 sfdWindow = ((sfdWindow << 1)) | bit; // always keep 8 latest bits in sfdWindow
+                if (sfdWindow == 0b10101011) {
+                ReceivingState = ReceivingStateEnum::RECORDING;
+            }
+            } else if (ReceivingState == ReceivingStateEnum::RECORDING) {
+                 bitReceiveBuffer.push_back(bit);
+            }
+    }
 
 }
 
@@ -120,6 +163,43 @@ void NetworkInterface::serialize(const std::unique_ptr<EthernetFrame>& frame) {
     serializeStringToBits(frame->getPayload());
 }
 
+std::unique_ptr<EthernetFrame> NetworkInterface::deserialize() {
+    std::stringstream dstMac;
+    std::stringstream srcMac;
+    std::string payload;
+    unsigned char byte = 0;
+    size_t bitPos = 0;
+    for (size_t i = 0; i < 6; i++) {
+        for (size_t j = 0; j < 8; j++) {
+            byte = (byte << 1) | bitReceiveBuffer[bitPos];
+            bitPos++;
+        }
+        if (i>0) { dstMac << ":";}
+    dstMac << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned int>(byte);
+    byte=0;
+    }
+    for (size_t i = 0; i < 6; i++) {
+        for (size_t j = 0; j < 8; j++) {
+            byte = (byte << 1) | bitReceiveBuffer[bitPos];
+            bitPos++;
+        }
+         if (i>0) { srcMac << ":";}
+    srcMac << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned int>(byte);
+    byte=0;
+    }
+    while (bitPos+8 <= bitReceiveBuffer.size()) {
+        char c=0;
+        for (size_t i = 0; i < 8; i++) {
+            c = (c << 1) | bitReceiveBuffer[bitPos];
+            bitPos++;
+        }
+        payload += c;
+    }
+
+    return std::make_unique<EthernetFrame>(srcMac.str(), dstMac.str(), payload);
+
+}
+
 void NetworkInterface::connectBus(EthernetBus* bus) {
     connectedBus = bus;
     connection_status = ConnectionStatus::CONNECTED;
@@ -127,7 +207,9 @@ void NetworkInterface::connectBus(EthernetBus* bus) {
 
 
 void NetworkInterface::sendFrame(std::unique_ptr<EthernetFrame> frame) {
+     std::cout << "Pushed frame into queue. Payload: " << frame->getPayload();
     frameQueue.push(std::move(frame));
+   
 
 }
 

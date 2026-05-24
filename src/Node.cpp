@@ -35,14 +35,15 @@ std::vector<NetworkInterface*> Node::getInterfaces(std::string filterParam) {
 }
 
 void Node::onTick() {
-    std::cout << "Node ticked " << getName() << std::endl; // to be replaced
     for (auto& interface : interfaces) {
         interface->onTick();
     }
 }
 
 void Node::resolveTick() {
-
+for (auto& interface : interfaces) {
+        interface->resolveTick();
+    }
 }
 
 std::string Node::getMAC() {
@@ -56,8 +57,4 @@ void Node::send(std::string dest_mac, std::string payload) {
     std::unique_ptr<EthernetFrame> frame = std::make_unique<EthernetFrame>(this->getMAC(), dest_mac, payload);
     NetworkInterface* interface =  getInterfaces("connected").at(0);
     interface->sendFrame(std::move(frame));
-    for (bool bit : interface->bitSendQueue) { // for debugging
-        std::cout << (bit ? "1" : "0") << std::flush;
-    }
-    std::cout << std::endl;
 }

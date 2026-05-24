@@ -11,10 +11,12 @@ class EthernetBus : public ITickable {
     void connect(NetworkInterface* interface);
     void onTick() override;
     void resolveTick() override;
-    Signal current_signal;
+    Signal current_signal = Signal::IDLE;
     void reportSignal(Signal signal);
+    void prepareNewTick();
     private:
     std::vector<NetworkInterface*> connectedInterfaces;
     void broadcast(EthernetFrame f);
-    int SignalsPresentThisTick;
+    int SignalsPresentThisTick = 0;
+    Signal writing_signal = Signal::IDLE;
 };

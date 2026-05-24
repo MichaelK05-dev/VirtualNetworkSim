@@ -34,13 +34,23 @@ LAN* NetworkManager::getLAN(std::string name) {
 }
 
 void NetworkManager::simulate(int steps) {
-    for (int i = 0; i <= steps; i++) {
+    std::cout << "DEBUG: Anzahl Objekte in tickable_list: " << tickable_list.size() << std::endl;
+    for (int i = 0; i < steps; i++) {
+
+    for (const auto& tickable : tickable_list) { 
+       
+        if (auto* bus = dynamic_cast<EthernetBus*>(tickable)) {
+            bus->prepareNewTick();
+        }
+    }
     for (const auto& tickable : tickable_list) { 
         tickable->onTick();
     }
+    std::cout << "done with onticks";
     for (const auto& tickable : tickable_list) { 
         tickable->resolveTick();
     }
+    std::cout << "done with resolveticks";
     }
     
 }
