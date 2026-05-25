@@ -80,7 +80,7 @@ if (State == StateEnum::SENDING && bitSendQueue.empty()) {
 }
 
     if (State == StateEnum::SENSING) {
-        //std::cout << parent->getName() << "in sensing: " << idleTicksCounter; for debugging
+        std::cout << parent->getName() << "in sensing: " << idleTicksCounter;
         if (connectedBus->current_signal == Signal::IDLE) {
             idleTicksCounter++;
         } else {
@@ -100,6 +100,7 @@ if (State == StateEnum::SENDING && bitSendQueue.empty()) {
         std::uniform_int_distribution<int> distribution(0,backoff_limit);
         int random_wait = distribution(generator);
         backoffTimer = random_wait*Config::Ethernet::SLOT_TIME_TICKS;
+        std::cout << parent->getName() << ": Backoff-Ticks: " << backoffTimer;
         State = StateEnum::BACKOFF;
         currentSendingBit = Signal::IDLE;
         } else if (State == StateEnum::FINISHING) {
