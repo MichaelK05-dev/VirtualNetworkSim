@@ -246,3 +246,7 @@ std::vector<bool> NetworkInterface::convertMACToBits(std::string hex_string) {
 
     return return_vector;
 }
+
+EthernetBus* NetworkInterface::getBus() {
+    return connectedBus;
+}

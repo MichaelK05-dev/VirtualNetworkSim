@@ -30,6 +30,7 @@ class NetworkInterface : public ITickable {
         void sendFrame(std::unique_ptr<EthernetFrame>);
         void serialize(const std::unique_ptr<EthernetFrame>& frame);
         std::unique_ptr<EthernetFrame> deserialize();
+        EthernetBus* getBus();
     private:
         std::string mac_address;
         long long static nextID; // incremented for each Interface, so MACs will always be unique. TO DO: Switch to random MACs 
