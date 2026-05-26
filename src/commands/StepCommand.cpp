@@ -6,6 +6,10 @@
 #include <stdexcept>
 
 void StepCommand::execute(const std::vector<std::string>& args, NetworkManager& NetManager) {
+    if (args.size() < 2) {
+        std::cout << "Invalid arguments for STEP. Please provide an integer value." << std::endl;
+        return;
+    }
     try {
         size_t processed_chars = 0;
     NetManager.simulate(std::stoi(args[1], &processed_chars));
