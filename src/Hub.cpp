@@ -2,7 +2,9 @@
 #include "NetworkInterface.h"
 #include "GlobalTypes.h"
 #include "EthernetBus.h"
-Hub::Hub(std::string name, int ports) : Node{name}
+
+static long long nextHubID = 1;
+Hub::Hub(int ports) : Node{"Hub"+std::to_string(nextPCID++)}
 {
     for (int i = 0; i < 4; ++i)
     {
