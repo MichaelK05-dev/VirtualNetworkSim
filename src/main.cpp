@@ -8,6 +8,7 @@
 #include "commands/ListCommand.h"
 #include "commands/StepCommand.h"
 #include "commands/SendCommand.h"
+#include "commands/ConnectCommand.h"
 
 
 int main() {
@@ -25,6 +26,7 @@ int main() {
    c1.registerCommand("LIST", new ListCommand());
    c1.registerCommand("STEP", new StepCommand());
    c1.registerCommand("SEND", new SendCommand());
+   c1.registerCommand("CONNECT", new ConnectCommand());
    
 
 while (true) {

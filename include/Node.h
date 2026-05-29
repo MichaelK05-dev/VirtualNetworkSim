@@ -13,9 +13,9 @@ class Node : public INode {
     void onTick() override;
     void resolveTick() override; // eventually private
     void send(std::string dest_mac, std::string payload);
-    private:
     protected:
     void addInterface();
     std::vector<std::unique_ptr<NetworkInterface>> interfaces;
     std::string name;
+    private:
 };

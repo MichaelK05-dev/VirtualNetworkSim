@@ -14,8 +14,8 @@ class EthernetBus : public ITickable {
     Signal current_signal = Signal::IDLE;
     void reportSignal(Signal signal);
     void prepareNewTick();
-    private:
     std::vector<NetworkInterface*> connectedInterfaces;
+    private:
     void broadcast(EthernetFrame f);
     int SignalsPresentThisTick = 0;
     Signal writing_signal = Signal::IDLE;

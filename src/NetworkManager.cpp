@@ -19,6 +19,9 @@ void NetworkManager::addLAN(std::unique_ptr<LAN> inputLAN) {
     }
     
 }
+void NetworkManager::addCable(std::unique_ptr<EthernetBus> inputCable) {
+    cable_list.push_back(std::move(inputCable));
+}
 
 std::vector<std::unique_ptr<LAN>>& NetworkManager::getLANs() {
     return LAN_list;
@@ -56,7 +59,7 @@ void NetworkManager::addTickable(ITickable* tickable) {
     tickable_list.push_back(tickable);
 }
 
-std::vector<ITickable*> NetworkManager::getTickables() {
+std::vector<ITickable*>& NetworkManager::getTickables() {
     return tickable_list;
 }
 

@@ -2,9 +2,10 @@
 #include "NetworkInterface.h"
 #include "GlobalTypes.h"
 #include "EthernetBus.h"
+#include <string>
 
 static long long nextHubID = 1;
-Hub::Hub(int ports) : Node{"Hub"+std::to_string(nextPCID++)}
+Hub::Hub(int ports) : Node{"Hub"+std::to_string(nextHubID++)}
 {
     for (int i = 0; i < 4; ++i)
     {
