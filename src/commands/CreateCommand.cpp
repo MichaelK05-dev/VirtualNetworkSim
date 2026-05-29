@@ -40,3 +40,4 @@ void CreateCommand::execute(const std::vector<std::string>& args, NetworkManager
     }
     }
 }
+}
