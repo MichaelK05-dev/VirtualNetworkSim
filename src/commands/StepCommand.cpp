@@ -12,13 +12,16 @@ void StepCommand::execute(const std::vector<std::string>& args, NetworkManager& 
     }
     try {
         size_t processed_chars = 0;
+        if (args[1] == "CONTINUOUSLY") {
+            NetManager.simulate(args[1]);
+        }
     NetManager.simulate(std::stoi(args[1], &processed_chars));
 
     if (processed_chars != args[1].size()) {
         throw std::invalid_argument("Please provide an integer value.");
     }
     } catch (const std::exception& e) {
-        std::cout << "Invalid arguments for STEP. Please provide an integer value." << std::endl;
+        std::cout << e.what() << std::endl;
     }
 
 }

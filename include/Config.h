@@ -7,4 +7,8 @@ namespace Config {
         inline constexpr int BACKOFF_LIMIT_K = 10;
 
     }
+    namespace Debug {
+         inline constexpr int debug_delay = 100; // delay between debug messages in console in milliseconds
+         inline constexpr int max_tries = 50000; // max tries for STEP CONTINUOUSLY mode (default, can be overriden)
+    }
 }

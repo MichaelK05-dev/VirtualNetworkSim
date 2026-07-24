@@ -3,6 +3,8 @@
 #include "LAN.h"
 #include <algorithm>
 #include "Node.h"
+#include <thread>
+#include <Config.h>
 
 
 void NetworkManager::addLAN(std::unique_ptr<LAN> inputLAN) { 
@@ -35,7 +37,6 @@ LAN* NetworkManager::getLAN(std::string name) {
     }
     return nullptr;
 }
-
 void NetworkManager::simulate(int steps) {
     for (int i = 0; i < steps; i++) {
 
@@ -53,6 +54,13 @@ void NetworkManager::simulate(int steps) {
     }
     }
     
+}
+
+void NetworkManager::simulate(std::string mode, int max_tries) {
+    for (int i = 0; i < max_tries; i++) {
+    simulate(1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(Config::Debug::debug_delay));
+    }
 }
 
 void NetworkManager::addTickable(ITickable* tickable) {

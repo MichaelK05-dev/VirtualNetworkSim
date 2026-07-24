@@ -1,0 +1,27 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "TEst",
+            "displayName": "Visual Studio Build Tools 2022 Release - x86",
+            "description": "Using compilers for Visual Studio 17 2022 (x86 architecture)",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=x86",
+            "architecture": "win32",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "TEst-debug",
+            "displayName": "Visual Studio Build Tools 2022 Release - x86 - Debug",
+            "configurePreset": "TEst",
+            "configuration": "Debug"
+        }
+    ]
+}
